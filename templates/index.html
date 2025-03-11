@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRC Preflight Checklist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>PREFLIGHT CHECKLIST</h1>
+        <form method="POST">
+            <!-- Toggle Switch for Manual Match Selection -->
+            <div class="toggle-switch">
+                <label for="manual_selection">Manual Match Selection:</label>
+                <input type="checkbox" id="manual_selection" name="manual_selection" {% if manual_selection %}checked{% endif %}>
+            </div>
+
+            <!-- Match Selection Dropdown -->
+            <label for="match_select">Select Match:</label>
+            <select id="match_select" name="match_select">
+                <option value="">-- Select a Match --</option>
+                {% for match in matches %}
+                    <option value="{{ match.key }}">{{ match.comp_level }} {{ match.match_number }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Initial Checks Section -->
+            <div class="initial-checks">
+                <h2>Initial Checks</h2>
+                {% for item, status in initial_checks.items() %}
+                    <label>
+                        <input type="checkbox" name="{{ item }}" {% if status %}checked{% endif %}>
+                        {{ item.replace("_", " ").title() }}
+                    </label>
+                {% endfor %}
+            </div>
+
+            <!-- Preflight Checklist Section -->
+            <div class="checklist">
+                <h2>Preflight Checklist</h2>
+                {% for item, status in checklist.items() %}
+                    <label>
+                        <input type="checkbox" name="{{ item }}" {% if status %}checked{% endif %}>
+                        {{ item.replace("_", " ").title() }}
+                    </label>
+                {% endfor %}
+            </div>
+
+            <!-- Confirm and Reset Buttons -->
+            <div class="buttons">
+                <button type="submit">Confirm Preflight Complete</button>
+                <button type="submit" name="reset" class="reset-button">Reset Checklist</button>
+            </div>
+        </form>
+
+        <!-- Download Logs Button -->
+        <a href="{{ url_for('download_logs') }}" class="download-button">Download Logs</a>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
