@@ -14,17 +14,24 @@ TBA_URL = f"https://www.thebluealliance.com/api/v3/team/{TBA_TEAM_KEY}/events/20
 
 # Initialize checklist items
 checklist = {
-    "can_dust": False,
+    "can_range_dust": False,
     "ratchet_pins": False,
     "rope": False,
     "funnel_down": False,
-    "barb_wiggle": False,
-    "wheel_alignment": False,
+    "wheel_alignment_and_drive": False,
     "elevator_down": False,
     "fresh_battery": False,
-    "battery_beaked": False,
     "intake_funnel": False,
-    "intake_arm": False,
+    "intake_arm_coral": False,
+    "intake_arm_alage": False,
+    "l1_scoring": False,
+    "l2_scoring": False,
+    "l3_scoring": False,
+    "l4_scoring": False,
+    "processor_scoring": False,
+    "left_cam":False,
+    "right_cam": False,
+    "send_rishi_to question_box":True
 }
 
 # Initialize initial section items
@@ -38,7 +45,7 @@ initial_checks = {
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
-def get_matches(manual_selection=False):
+def get_matches(manual_selection=True):
     """Fetch matches for team 4611 or generate matches for manual selection."""
     headers = {"X-TBA-Auth-Key": TBA_API_KEY}
     if not manual_selection:
@@ -74,7 +81,7 @@ def get_matches(manual_selection=False):
 @app.route("/", methods=["GET", "POST"])
 def index():
     manual_selection = request.form.get("manual_selection") == "on"
-    matches = get_matches(manual_selection)
+    matches = get_matches()
     selected_match = None
 
     if request.method == "POST":
